@@ -86,7 +86,7 @@ console.log(response);
 
 ## 2.2 - Request
 
-## 2.2.1 - Headers
+### 2.2.1 - Headers
 
 content-type indicates the `media type of the resource`, as:
 
@@ -98,7 +98,7 @@ content-type indicates the `media type of the resource`, as:
 
 Also, you have other headers as authentication, user-agent, cookies, x-forwarded-for (origin IP) and more.
 
-## 2.2.2 - URL
+### 2.2.2 - URL
 
 `Part of the URL route can be accessed via req.url` -> it contains the path and query string, e.g., /route?query=1.
 
@@ -112,3 +112,63 @@ const url = new URL(req.url || "/", "http://localhost"); // ✅ the right way
 > Don't trust in req.headers.host, it's provided by the client and can be faked.
 
 To get the searchParams you you can use url.searchParams.get('paramName')
+
+### 2.2.3 - for await
+
+Makes it possible to `loop through async iterables`. It's useful to read request body data in chunks.
+
+```js
+const example1 = Promise.resolve("Hello");
+const example2 = Promise.resolve("World");
+const phrases = [];
+
+for await (const phrases of [example1, example2]) {
+  phrases.push(phrases);
+}
+
+phrases.join(" "); // "Hello World"
+```
+
+### 2.2.4 - Buffer
+
+Buffer is a block of bytes in memory. `To transform these bytes into usable data we need to concatenate them` in an appropriate data structure.
+
+Buffer.from -> transforms data into a buffer.
+Buffer.concat -> Concatenates multiple buffers into one.
+
+```js
+const example1 = Buffer.from("Hello");
+const example2 = Buffer.from("World");
+const phrases = Buffer.concat([part1, part2]);
+
+console.log(final); // <Buffer 48 65 6c 6c 6f 20 57 6f 72 6c 64>
+console.log(final.toString()); // "Hello World"
+```
+
+In some real example with for await:
+
+```js
+const chunks = [];
+
+for await (const chunk of req) {
+  chunks.push(chunk);
+}
+
+const body = Buffer.concat(chunks).toString("utf-8");
+```
+
+You can also use callbacks to handle it:
+
+```js
+const chunks = [];
+req
+  .on("error", (err) => {
+    console.error(err);
+  })
+  .on("data", (chunk) => {
+    chunks.push(chunk);
+  })
+  .on("end", () => {
+    const body = Buffer.concat(chunks).toString("utf-8");
+  });
+```
