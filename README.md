@@ -85,3 +85,30 @@ console.log(response);
 ```
 
 ## 2.2 - Request
+
+## 2.2.1 - Headers
+
+content-type indicates the `media type of the resource`, as:
+
+- text/html: HTML document
+- application/json: JSON format
+- multipart/form-data: form data with files
+
+> Because of the hyphen in content-type, when accessing it via req.headers, use bracket notation: req.headers['content-type'], others can be accessed via dot notation: req.headers.cookie
+
+Also, you have other headers as authentication, user-agent, cookies, x-forwarded-for (origin IP) and more.
+
+## 2.2.2 - URL
+
+`Part of the URL route can be accessed via req.url` -> it contains the path and query string, e.g., /route?query=1.
+
+`new URL(path, host) makes the parse` and create an URL object.
+
+```js
+const url = new URL(req.url || "/", `${req.headers.host}`); // ❌ avoid this, it's possible to fake the host
+const url = new URL(req.url || "/", "http://localhost"); // ✅ the right way
+```
+
+> Don't trust in req.headers.host, it's provided by the client and can be faked.
+
+To get the searchParams you you can use url.searchParams.get('paramName')

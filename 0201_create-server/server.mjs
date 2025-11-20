@@ -1,20 +1,26 @@
 import { createServer } from "node:http";
 
-const server = createServer((request, response) => {
-  response.setHeader("Content-Type", "text/plain; charset=utf-8");
+const server = createServer((req, res) => {
+  res.setHeader("Content-Type", "text/html");
 
-  if (request.method === "GET" && request.url === "/") {
-    response.statusCode = 200;
-    response.end("Home.");
-  } else if (request.method === "POST" && request.url === "/product") {
-    response.statusCode = 201;
-    response.end("Product created.");
+  const url = new URL(req.url, `htpp://localhost:3000`)
+  const color = url.searchParams.get("color")
+  const size = url.searchParams.get("size")
+
+  console.log(req.headers)
+
+  if (req.method === "GET" && url.pathname === "/") {
+    res.statusCode = 200;
+    res.end("Home.");
+  } else if (req.method === "POST" && url.pathname === "/products") {
+    res.statusCode = 201;
+    res.end(`Products: ${color}, ${size}`);
   } else {
-    response.statusCode = 404;
-    response.end("Not found.");
+    res.statusCode = 404;
+    res.end("Not found.");
   }
 
-  console.log(request.method);
+  console.log(req.method);
 });
 
 server.listen(3000, () => {
