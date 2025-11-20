@@ -172,3 +172,5 @@ req
     const body = Buffer.concat(chunks).toString("utf-8");
   });
 ```
+
+## 2.3 - Response
