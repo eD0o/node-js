@@ -211,3 +211,80 @@ res.setHeader(
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status -> to know more about status codes.
 
 ## 2.4 - Router
+
+Custom lightweight (like an util file) `router to avoid long chains of if/else` route checks:
+
+### 2.4.1 - Router class
+
+```js
+// router.mjs
+export class Router {
+  routes = { GET: {}, POST: {} };
+
+  get(route, handler) {
+    this.routes.GET[route] = handler;
+  }
+
+  post(route, handler) {
+    this.routes.POST[route] = handler;
+  }
+
+  find(method, route) {
+    return this.routes[method]?.[route] || null;
+  }
+}
+```
+
+- routes: in-memory map keyed by HTTP verb (GET, POST), each storing a path → `handler function`.
+- get / post: register a handler for a path under the respective verb.
+- find: lookup helper that returns the registered handler or null if missing.
+
+### 2.4.2 - Using the router in the server
+
+```js
+// server.mjs
+import { createServer } from "node:http";
+import { Router } from "./router.mjs";
+
+const router = new Router();
+
+router.get("/", (req, res) => res.end("Home"));
+router.get("/contact", (req, res) => res.end("Contact"));
+router.get("/product/notebook", (req, res) => res.end("Products - Notebook"));
+router.post("/product", (req, res) => res.end("Notebook Post"));
+
+const server = createServer(async (req, res) => {
+  const url = new URL(req.url || "/", "http://localhost");
+
+  // read body in case handlers need it later
+  const chunks = [];
+  for await (const chunk of req) chunks.push(chunk);
+  const body = Buffer.concat(chunks).toString("utf-8");
+
+  const handler = router.find(req.method, url.pathname);
+  if (handler) {
+    handler(req, res); // delegate to the matched route
+  } else {
+    res.statusCode = 404;
+    res.end("Not found");
+  }
+});
+
+server.listen(3000, () =>
+  console.log("Server running at http://localhost:3000/")
+);
+```
+
+Flow:
+
+- `Register routes` up front with router.get / router.post.
+- On each request, `parse the path with new URL`(req.url, "http://localhost").
+- (Optional) read the request body; it can be passed to handlers if needed.
+- `Ask the router for a handler` via router.find(req.method, url.pathname).
+- If found, call it; otherwise return a 404.
+
+Why this extraction helps:
+
+- Keeps the server callback small and focused on common tasks (parse URL, read body, delegate).
+- Makes route definitions clearer and grouped together.
+- Easier to extend (add more HTTP verbs, middleware, or parameterized routes later).
