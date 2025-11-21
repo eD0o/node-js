@@ -288,3 +288,5 @@ Why this extraction helps:
 - Keeps the server callback small and focused on common tasks (parse URL, read body, delegate).
 - Makes route definitions clearer and grouped together.
 - Easier to extend (add more HTTP verbs, middleware, or parameterized routes later).
+
+## 2.5 - Custom Request and Response
