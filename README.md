@@ -174,3 +174,38 @@ req
 ```
 
 ## 2.3 - Response
+
+It's about sending data back to the client.
+
+### 2.3.1 - setHeader
+
+Defines a response header key-value pair. It allows the CORS control, origin, content-type, and more.
+
+| Header / Directive               | What It Does                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Access-Control-Allow-Methods** | Defines which HTTP methods (GET, POST, etc.) are allowed by the server.                          |
+| **Set-Cookie**                   | Sends cookies from the server to the client to be stored and resent later.                       |
+| **Access-Control-Allow-Origin**  | Specifies which URLs/origins are allowed to make requests to the server. `*` allows all origins. |
+
+```js
+// CORS
+res.setHeader("Access-Control-Allow-Origin", "*");
+res.setHeader(
+  "Access-Control-Allow-Methods",
+  "GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS"
+);
+res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+// Cache
+res.setHeader("Cache-Control", "max-age=300, must-revalidate");
+
+// Cookie
+res.setHeader(
+  "Set-Cookie",
+  "token=123; HttpOnly; SameSite=Strict; Max-Age=3600; Path=/; Secure;"
+);
+```
+
+### 2.3.2 - statusCode
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status -> to know more about status codes.
