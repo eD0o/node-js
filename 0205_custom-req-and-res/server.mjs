@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import { Router } from './router.mjs';
+import { customResponse } from './custom-response.mjs';
 
 const router = new Router();
 
@@ -15,16 +16,20 @@ router.get('/produto/notebook', (req, res) => {
   res.end('Produtos - Notebook');
 });
 
-const server = createServer((req, res) => {
+const server = createServer(async (request, response) => {
+
+  const req = await customRequest(request)
+  const res = customResponse(response)
+
   const url = new URL(req.url, `htpp://localhost:3000`)
   console.log(req.headers)
-  
+
   const handler = router.find(req.method, url.pathname);
   if (handler) {
     handler(req, res);
   } else {
     res.statusCode = 404;
-    res.end("Not found.");
+    res.status(404).end("Not found.");
   }
 });
 

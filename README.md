@@ -290,3 +290,55 @@ Why this extraction helps:
 - Easier to extend (add more HTTP verbs, middleware, or parameterized routes later).
 
 ## 2.5 - Custom Request and Response
+
+If necessary to `extend the request and response objects with custom methods or properties`, you can create wrapper classes. It may be a query, body, ip, cookies, etc.
+
+> Just avoid to add conflicting names with existing properties/methods, even in the future versions of Node.js.
+
+Examples:
+
+```js
+// custom-request.mjs
+export async function customRequest(req) {
+  // URL Parsing
+  const url = new URL(req.url || "/", "http://localhost");
+  req.pathname = url.pathname;
+  req.query = url.searchParams;
+
+  // Body Parsing
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  const body = Buffer.concat(chunks).toString("utf-8");
+  if (req.headers["content-type"] === "application/json") {
+    req.body = JSON.parse(body);
+  } else {
+    req.body = body;
+  }
+  return req;
+}
+```
+
+```js
+// custom-response.mjs
+export async function customRequest(req) {
+  // URL Parsing
+  const url = new URL(req.url || "/", "http://localhost");
+  req.pathname = url.pathname;
+  req.query = url.searchParams;
+
+  // Body Parsing
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  const body = Buffer.concat(chunks).toString("utf-8");
+  if (req.headers["content-type"] === "application/json") {
+    req.body = JSON.parse(body);
+  } else {
+    req.body = body;
+  }
+  return req;
+}
+```
