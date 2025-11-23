@@ -342,3 +342,6 @@ export async function customRequest(req) {
   return req;
 }
 ```
+
+## 2.6 - FS
+
