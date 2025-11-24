@@ -345,3 +345,51 @@ export async function customRequest(req) {
 
 ## 2.6 - FS
 
+Module to work with the file system, `read and write files, create directories`, etc. It's possible to import the version based on promises.
+
+> It's recommended to use the operations with try/catch for error handling that may break the server.
+
+The attribute `recursive: true` allows iterating over nested directories (creating, deleting, or reading).
+
+The `Sync version blocks the event loop until the operation is complete`, which can lead to performance issues in a server environment. It's generally better to use the asynchronous versions with promises or callbacks.
+
+`Callback differs from Promise-based functions by accepting a function as the last argument` to handle the result or error once the operation completes. It's less commonly used in modern Node.js development due to the prevalence of Promises and async/await.
+
+Examples:
+
+```js
+// fs/promises with async/await + error handling
+import fs from "fs/promises";
+
+try {
+  const data = await fs.readFile("./products/db.json", "utf-8");
+  const products = JSON.parse(data);
+
+  products.push({ id: 4, name: "New product" });
+  await fs.writeFile(
+    "./products/db.json",
+    JSON.stringify(products, null, 2), // pretty print JSON
+    "utf-8"
+  );
+} catch (err) {
+  console.error("FS error:", err);
+}
+```
+
+```js
+// ensure directory exists (recursive)
+import fs from "fs/promises";
+
+await fs.mkdir("./products/images/thumbs", { recursive: true });
+await fs.copyFile("./products/photo.png", "./products/images/thumbs/photo.png");
+```
+
+```js
+// callback style (less common)
+import fs from "fs";
+
+fs.readFile("./products/db.json", "utf-8", (err, data) => {
+  if (err) return console.error("Cannot read file:", err);
+  console.log("File content:", data);
+});
+```
