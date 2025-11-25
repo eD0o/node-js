@@ -395,3 +395,74 @@ fs.readFile("./products/db.json", "utf-8", (err, data) => {
 ```
 
 ## 2.7 - Database (SQLite)
+
+`Above version 23, Node.js has built-in support for SQLite` via the node:sqlite module. You can create a database, tables, insert, query, update, and delete data.
+
+Methods in general:
+
+- DatabaseSync: synchronous version of the database connection.
+
+- exec: Executes one or multiple SQL statements at once. Doesn't return rows and doesn't accept placeholders or parameters.
+
+- prepare: Compiles a SQL statement and returns a Statement object that you can call with:
+  - get: Runs the statement and returns a single row or undefined.
+  - all: Runs the statement and returns all matching rows as an array.
+  - run: Executes a prepared SQL statement without returning result rows.
+
+The term "?" placehoders are used to `safely insert values into SQL statements`, preventing SQL injection attacks.
+
+`Pragmas are special commands to modify the operation of the SQLite database engine`. They can be used to set various operational parameters, such as enabling foreign key constraints or changing the journal mode.
+
+Code example so far:
+
+```js
+// database.mjs
+import { DatabaseSync } from "node:sqlite";
+
+const db = new DatabaseSync("./db.sqlite");
+
+db.exec(/*sql*/ `
+  PRAGMA foreign_keys = 1;
+  PRAGMA journal_mode = WAL;
+  PRAGMA synchronous = NORMAL;
+
+  PRAGMA cache_size = 2000;
+  PRAGMA busy_timeout = 5000;
+  PRAGMA temp_store = MEMORY;
+`);
+
+db.exec(/*sql*/ `
+  CREATE TABLE IF NOT EXISTS "products"(
+  "slug" TEXT PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "category" TEXT NOT NULL,
+  "price" INTEGER NOT NULL
+  );
+`);
+
+const insert = db.prepare(/*sql*/ `
+  INSERT OR IGNORE INTO "products" ("slug", "name", "category", "price")
+  VALUES (?, ?, ?, ?);
+`);
+
+insert.run("notebook", "Notebook", "eletronics", 3000);
+insert.run("monitor", "Monitor", "eletronics", 1500);
+insert.run("notebook-case", "Notebook Case", "accessories", 50);
+insert.run("table", "Table", "furniture", 800);
+
+const products = db.prepare(`SELECT * FROM "products"`).all();
+const product = db
+  .prepare(`SELECT * FROM "products" WHERE "slug" = ?`)
+  .get("monitor");
+
+console.log("Products: ", products);
+console.log("PRODUCT: ", product);
+```
+
+database.mjs output content:
+![](https://i.imgur.com/IgU58m7.png)
+
+
+> Extensions recommended: SQLite3 Editor (VSCode) to visualize the database content and es6-string-sql for syntax highlighting.
+
+> Attention: Use "" for columns and '' for values.
