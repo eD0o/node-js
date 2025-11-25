@@ -393,3 +393,5 @@ fs.readFile("./products/db.json", "utf-8", (err, data) => {
   console.log("File content:", data);
 });
 ```
+
+## 2.7 - Database (SQLite)
