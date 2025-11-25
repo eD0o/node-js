@@ -466,3 +466,5 @@ database.mjs output content:
 > Extensions recommended: SQLite3 Editor (VSCode) to visualize the database content and es6-string-sql for syntax highlighting.
 
 > Attention: Use "" for columns and '' for values.
+
+## 2.8 - Mini LMS
