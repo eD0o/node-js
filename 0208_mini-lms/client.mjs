@@ -1,40 +1,49 @@
-// case 1: POST - /products
+const base = 'http://localhost:3000'
 
-const notebookPost = await fetch("http://localhost:3000/products", {
+await fetch(base + "/courses", {
   method: "POST",
   headers: {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json"
   },
-  body: JSON.stringify({ name: 'Notebook', slug: 'notebook', category: 'eletronics', price: 3000 })
-});
+  body: JSON.stringify({
+    slug: 'javascript',
+    name: 'JavaScript',
+    description: 'JavaScript Course'
+  })
+})
 
-console.log(notebookPost)
-
-const body = await notebookPost.text();
-
-console.log(body)
-
-await fetch("http://localhost:3000/products", {
+await fetch(base + "/courses", {
   method: "POST",
   headers: {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json"
   },
-  body: JSON.stringify({ name: 'Monitor', slug: 'monitor', category: 'eletronics', price: 1500 })
-});
+  body: JSON.stringify({
+    slug: 'css',
+    name: 'css',
+    description: 'Css Course'
+  })
+})
 
-// case 2: GET - /product
+await fetch(base + "/courses", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    slug: 'html',
+    name: 'html',
+    description: 'HTML Course'
+  })
+})
 
-const productGet = await fetch("http://localhost:3000/product?category=eletronics&slug=notebook");
-
-const productGetJson = await productGet.json()
-
-console.log(productGetJson)
-
-// case 3: GET - /products
-
-const productsGet = await fetch("http://localhost:3000/products");
-
-const productsGetJson = await productsGet.json()
-
-console.log(productsGetJson)
-
+await fetch(base + "/courses", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    slug: 'typescript',
+    name: 'typescript',
+    description: 'TypeScript Course'
+  })
+})
