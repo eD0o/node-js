@@ -468,3 +468,7 @@ database.mjs output content:
 > Attention: Use "" for columns and '' for values.
 
 ## 2.8 - Mini LMS
+
+Exercise created in the folder 0208_mini-lms to practice all concepts learned so far: server, router, custom request/response, fs, and database (SQLite).
+
+## 2.9 - TypeScript
