@@ -10,7 +10,7 @@ router.post('/courses', (req, res) => {
   const { slug, name, description } = req.body;
   const created = createCourse({ slug, name, description })
   if (created) {
-    res.status(201).json("Course Created:", name)
+    res.status(201).json("Course Created.")
   } else {
     res.status(400).json('Error.')
   }
@@ -20,7 +20,7 @@ router.post('/classes', (req, res) => {
   const { slug, name, courseSlug } = req.body;
   const created = createClass({ slug, name, courseSlug })
   if (created) {
-    res.status(201).json("Class Created:", name)
+    res.status(201).json("Class Created.")
   } else {
     res.status(400).json('Error.')
   }
@@ -71,7 +71,7 @@ const server = createServer(async (request, response) => {
   const req = await customRequest(request);
   const res = customResponse(response)
 
-  const handler = router.find(req.method, req.pathname);
+  const handler = router.find(req.method || "/", req.pathname);
 
   if (handler) {
     handler(req, res);
