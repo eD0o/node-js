@@ -181,11 +181,11 @@ It's about sending data back to the client.
 
 Defines a response header key-value pair. It allows the CORS control, origin, content-type, and more.
 
-| Header / Directive               | What It Does                                                                                     |
-| -------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **Access-Control-Allow-Methods** | Defines which HTTP methods (GET, POST, etc.) are allowed by the server.                          |
-| **Set-Cookie**                   | Sends cookies from the server to the client to be stored and resent later.                       |
-| **Access-Control-Allow-Origin**  | Specifies which URLs/origins are allowed to make requests to the server. `*` allows all origins. |
+| Header / Directive           | What It Does                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| Access-Control-Allow-Methods | Defines which HTTP methods (GET, POST, etc.) are allowed by the server.                          |
+| Set-Cookie                   | Sends cookies from the server to the client to be stored and resent later.                       |
+| Access-Control-Allow-Origin  | Specifies which URLs/origins are allowed to make requests to the server. `*` allows all origins. |
 
 ```js
 // CORS
@@ -462,7 +462,6 @@ console.log("PRODUCT: ", product);
 database.mjs output content:
 ![](https://i.imgur.com/IgU58m7.png)
 
-
 > Extensions recommended: SQLite3 Editor (VSCode) to visualize the database content and es6-string-sql for syntax highlighting.
 
 > Attention: Use "" for columns and '' for values.
@@ -472,3 +471,11 @@ database.mjs output content:
 Exercise created in the folder 0208_mini-lms to practice all concepts learned so far: server, router, custom request/response, fs, and database (SQLite).
 
 ## 2.9 - TypeScript
+
+Node 22+ ships an experimental type-stripper.
+
+> It only removes types and runs the JS output; it does not type-check. Keep installing the typescript package (or use tools like tsc, tsx, ts-node) when you need type checking, emit options, and editor tooling.
+
+- Stripping only handles syntax compatible with plain JS. Features that need TS transforms (e.g., enum, namespace, const enum, legacy decorators) won't work.
+
+- Goal in the course: rely on type inference as much as possible.

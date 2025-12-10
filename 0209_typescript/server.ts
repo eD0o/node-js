@@ -1,8 +1,8 @@
 import { createServer } from 'node:http';
-import { Router } from './router.mjs';
-import { customRequest } from './custom-request.mjs';
-import { customResponse } from './custom-response.mjs';
-import { createCourse, createClass, getCourses, getCourse, getClasses, getClass } from './database.mjs';
+import { Router } from './router.ts';
+import { customRequest } from './custom-request.ts';
+import { customResponse } from './custom-response.ts';
+import { createCourse, createClass, getCourses, getCourse, getClasses, getClass } from './database.ts';
 
 const router = new Router();
 
