@@ -30,3 +30,5 @@ Constraints (limits that simplify choices)
 - Each route feature gets its own folder under api/ with an index.ts entry to keep patterns consistent.
 - Shared helpers belong in core/utils/; avoid duplicating utilities inside api/.
 - Keep naming uniform (index.ts for entry files) to preserve predictable imports and onboarding.
+
+## 3.2 - Dynamic Router
