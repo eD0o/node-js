@@ -1,12 +1,9 @@
-import { createServer } from 'node:http';
-import { Router } from './router.ts';
-import { customRequest } from './custom-request.ts';
-import { customResponse } from './custom-response.ts';
-import { createCourse, createClass, getCourses, getCourse, getClasses, getClass } from './database.ts';
+import { Core } from './core/core.ts';
+import { createCourse, createClass, getCourses, getCourse, getClasses, getClass } from './core/database.ts';
 
-const router = new Router();
+const core = new Core();
 
-router.post('/courses', (req, res) => {
+core.router.post('/courses', (req, res) => {
   const { slug, name, description } = req.body;
   const created = createCourse({ slug, name, description })
   if (created) {
@@ -16,7 +13,7 @@ router.post('/courses', (req, res) => {
   }
 })
 
-router.post('/classes', (req, res) => {
+core.router.post('/classes', (req, res) => {
   const { slug, name, courseSlug } = req.body;
   const created = createClass({ slug, name, courseSlug })
   if (created) {
@@ -26,7 +23,7 @@ router.post('/classes', (req, res) => {
   }
 })
 
-router.get('/courses', (req, res) => {
+core.router.get('/courses', (req, res) => {
   const listCourses = getCourses()
   if (listCourses && listCourses.length) {
     res.status(200).json(listCourses)
@@ -35,7 +32,7 @@ router.get('/courses', (req, res) => {
   }
 })
 
-router.get('/course', (req, res) => {
+core.router.get('/course', (req, res) => {
   const slug = req.query.get("slug")
   const course = getCourse(slug)
   if (course) {
@@ -45,7 +42,7 @@ router.get('/course', (req, res) => {
   }
 })
 
-router.get('/classes', (req, res) => {
+core.router.get('/classes', (req, res) => {
   const courseSlug = req.query.get("course")
   const listClasses = getClasses(courseSlug)
   if (listClasses && listClasses.length) {
@@ -55,7 +52,7 @@ router.get('/classes', (req, res) => {
   }
 })
 
-router.get('/class', (req, res) => {
+core.router.get('/class', (req, res) => {
   const courseSlug = req.query.get("course")
   const classSlug = req.query.get("slug")
   const classTitle = getClass(courseSlug, classSlug)
@@ -66,20 +63,8 @@ router.get('/class', (req, res) => {
   }
 })
 
-const server = createServer(async (request, response) => {
+core.router.get('/', (req, res) => {
+  res.status(200).end('Hello')
+})
 
-  const req = await customRequest(request);
-  const res = customResponse(response)
-
-  const handler = router.find(req.method || "/", req.pathname);
-
-  if (handler) {
-    handler(req, res);
-  } else {
-    res.status(404).end("Not found.");
-  }
-});
-
-server.listen(3000, () => {
-  console.log("Server running at http://localhost:3000/");
-});
+core.init();
