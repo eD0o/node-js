@@ -32,3 +32,5 @@ Constraints (limits that simplify choices)
 - Keep naming uniform (index.ts for entry files) to preserve predictable imports and onboarding.
 
 ## 3.2 - Dynamic Router
+
+## 3.3 - Middleware
